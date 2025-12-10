@@ -1,5 +1,7 @@
 from starlette.websockets import WebSocket
+import logging
 
+logger = logging.getLogger(__name__)
 
 class ConnectionManager:
     def __init__(self):
@@ -7,6 +9,9 @@ class ConnectionManager:
 
     async def connect(self, websocket: WebSocket):
         await websocket.accept()
+
+        logger.info("websocket header : %s", websocket.headers)
+        logger.info("websocket cookies : %s", websocket.cookies)
         self.active_connections.append(websocket)
 
     def disconnect(self, websocket: WebSocket):

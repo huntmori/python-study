@@ -63,6 +63,10 @@ python main.py
 ```powershell
 uvicorn main:app --reload
 ```
+또는
+```powershell
+python -m uvicorn main:app --reload
+```
 
 ## API 엔드포인트
 

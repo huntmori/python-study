@@ -3,8 +3,27 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.database import engine, Base
 from app.routers import auth, users
 from app.routers import chat
+import logging
+from logging.config import dictConfig
 
-
+dictConfig({
+    "version": 1,
+    "disable_existing_loggers": False,  # uvicorn 등 기존 로거 유지하면서 레벨 적용
+    "formatters": {
+        "default": {"format": "%(levelname)s:%(name)s:%(message)s"}
+    },
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+            "formatter": "default",
+            "level": "INFO",
+        }
+    },
+    "root": {
+        "handlers": ["console"],
+        "level": "INFO",
+    },
+})
 app = FastAPI(
     title="FastAPI JWT Authentication",
     description="FastAPI project with JWT authentication, MariaDB, and SQLAlchemy 2.0",
@@ -50,6 +69,9 @@ async def health_check():
     """Health check endpoint"""
     return {"status": "healthy"}
 
+
+logger = logging.getLogger("app.Classes.ConnectionManager")
+logger.info("logger ready? level=%s handlers=%s propagate=%s", logger.level, logger.handlers, logger.propagate)
 
 if __name__ == "__main__":
     import uvicorn
