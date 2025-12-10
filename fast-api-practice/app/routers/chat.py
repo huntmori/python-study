@@ -5,6 +5,8 @@ from starlette.websockets import WebSocketDisconnect
 
 import logging
 
+from app import dtos
+
 from app.Classes.ConnectionManager import ConnectionManager
 
 router = APIRouter(prefix="/ws/chat", tags=["Chat"])
@@ -26,8 +28,8 @@ async def websocket_endpoint(websocket: WebSocket):
             logger.info(f"Received message of type {type}")
 
             if type == "ws_headers":
-                # Handle different message types here
-                await manager.send_personal_message(text,websocket)
+                logger.info(f"Received headers: {data}")
+                await manager.logIn(websocket, data.get('headers').get('access_token'))
             else:
                 await manager.send_personal_message(text,websocket)
     except WebSocketDisconnect:
